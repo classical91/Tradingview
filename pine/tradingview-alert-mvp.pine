@@ -4,11 +4,17 @@ indicator("TradingView Alert MVP", overlay=true, max_labels_count=50)
 webhookSecret = input.string("", "Webhook secret")
 lookback = input.int(20, "Breakout lookback", minval=2)
 rsiLength = input.int(14, "RSI length", minval=2)
+atrLength = input.int(14, "ATR length", minval=2)
+volumeLength = input.int(20, "Volume average length", minval=2)
 includeLabels = input.bool(true, "Show chart labels")
 
 rsiValue = ta.rsi(close, rsiLength)
 priorHigh = ta.highest(high, lookback)[1]
 priorLow = ta.lowest(low, lookback)[1]
+rangeMid = (priorHigh + priorLow) / 2
+atrValue = ta.atr(atrLength)
+atrPercent = atrValue / close * 100
+volumeSma = ta.sma(volume, volumeLength)
 
 breakout = ta.crossover(close, priorHigh)
 breakdown = ta.crossunder(close, priorLow)
@@ -22,6 +28,13 @@ formatJson(_signal) =>
       "\"price\":" + str.tostring(close, format.mintick) + "," +
       "\"signal\":\"" + _signal + "\"," +
       "\"rsi\":" + str.tostring(rsiValue, "#.##") + "," +
+      "\"rangeHigh\":" + str.tostring(priorHigh, format.mintick) + "," +
+      "\"rangeLow\":" + str.tostring(priorLow, format.mintick) + "," +
+      "\"rangeMid\":" + str.tostring(rangeMid, format.mintick) + "," +
+      "\"atr\":" + str.tostring(atrValue, format.mintick) + "," +
+      "\"atrPercent\":" + str.tostring(atrPercent, "#.##") + "," +
+      "\"volume\":" + str.tostring(volume, "#.##") + "," +
+      "\"volumeSma\":" + str.tostring(volumeSma, "#.##") + "," +
       "\"funding\":\"not_available_in_pine\"," +
       "\"openInterest\":\"not_available_in_pine\"," +
       "\"message\":\"" + syminfo.ticker + " " + _signal + " on " + timeframe.period + "\"," +
@@ -40,5 +53,6 @@ if breakdown
 
 plot(priorHigh, "Prior high", color=color.new(color.green, 25), linewidth=1)
 plot(priorLow, "Prior low", color=color.new(color.red, 25), linewidth=1)
+plot(rangeMid, "Range mid", color=color.new(color.blue, 45), linewidth=1)
 plotchar(breakout, "Breakout alert", "▲", location.abovebar, color=color.green)
 plotchar(breakdown, "Breakdown alert", "▼", location.belowbar, color=color.red)

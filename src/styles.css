@@ -201,6 +201,44 @@ h1 {
   margin-top: 6px;
 }
 
+.range-readout {
+  background: rgba(91, 140, 255, 0.08);
+  border: 1px solid rgba(91, 140, 255, 0.18);
+  border-radius: 6px;
+  display: grid;
+  gap: 7px;
+  margin: 9px 0;
+  padding: 9px;
+}
+
+.range-state {
+  color: #dce5f6;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.range-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.range-levels span {
+  background: rgba(6, 9, 20, 0.72);
+  color: var(--muted);
+  font-size: 11px;
+  padding: 4px 6px;
+}
+
+.range-risk {
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 code {
   color: #91b2ff;
   font-size: 12px;

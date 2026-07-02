@@ -27,6 +27,22 @@ function formatTime(value) {
   });
 }
 
+function formatLevel(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "--";
+  return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
+
+function rangeLabel(alert) {
+  if (!alert.range) return null;
+  return [
+    alert.range.rangeState,
+    alert.range.volatilityState,
+    alert.range.volumeState,
+    alert.range.rsiState,
+  ].filter(Boolean).join(" / ");
+}
+
 function LatestAlerts() {
   const [state, setState] = useState({ status: "loading", alerts: [] });
 
@@ -89,6 +105,18 @@ function LatestAlerts() {
                 <span>{alert.signal}</span>
                 <span>{formatTime(alert.timestamp)}</span>
               </div>
+              {alert.range && (
+                <div className="range-readout">
+                  <div className="range-state">{rangeLabel(alert)}</div>
+                  <div className="range-levels">
+                    <span>H {formatLevel(alert.range.levels?.rangeHigh)}</span>
+                    <span>M {formatLevel(alert.range.levels?.rangeMid)}</span>
+                    <span>L {formatLevel(alert.range.levels?.rangeLow)}</span>
+                    <span>ATR {formatLevel(alert.range.levels?.atrPercent)}%</span>
+                  </div>
+                  {alert.range.squeezeRisk !== "neutral" && <div className="range-risk">{alert.range.squeezeRisk}</div>}
+                </div>
+              )}
               <p>{alert.message}</p>
             </article>
           ))

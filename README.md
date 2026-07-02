@@ -10,6 +10,7 @@ Read-only TradingView dashboard and alert receiver.
 - Stores recent alerts locally in `data/tradingview-alerts.json`.
 - Shows the latest alerts on the dashboard.
 - Includes a Pine Script alert generator in `pine/tradingview-alert-mvp.pine`.
+- Classifies each alert with a deterministic Market Range Engine v1.
 
 ## Local Run
 
@@ -49,6 +50,13 @@ The Pine Script sends JSON shaped like:
   "price": 61200,
   "signal": "breakout",
   "rsi": 68,
+  "rangeHigh": 61500,
+  "rangeLow": 59000,
+  "rangeMid": 60250,
+  "atr": 850,
+  "atrPercent": 1.39,
+  "volume": 120000,
+  "volumeSma": 90000,
   "funding": "not_available_in_pine",
   "openInterest": "not_available_in_pine",
   "message": "BTCUSDT breakout on 1h",
@@ -61,6 +69,21 @@ The Pine Script sends JSON shaped like:
 - Edit dashboard symbols in `src/tradingViewConfig.js`.
 - Add more official widget wrappers in `src/TradingViewWidget.jsx`.
 - Connect OpenAI or Claude later in `tradingview-alerts.mjs`.
+- Tune deterministic range rules in `market-range-engine.mjs`.
 - Replace local JSON storage in `TradingViewAlertStore` with a database adapter.
 
 This MVP does not scrape TradingView, automate a browser, place trades, or run auto-trading logic.
+
+## Market Range Engine v1
+
+The range engine is rules-based. It does not use AI for decisions.
+
+Current classifications:
+
+- `rangeState`: breakout, breakdown, upper_range, mid_range, lower_range, above_range, below_range
+- `volatilityState`: compression, normal, expansion
+- `volumeState`: low, normal, high
+- `rsiState`: oversold, bearish, neutral, bullish, overbought
+- `squeezeRisk`: neutral, upside_breakout_building, downside_breakdown_building
+
+AI should be connected later only to explain these fields, not to invent them.

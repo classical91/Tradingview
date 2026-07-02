@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { z } from "zod";
+import { classifyMarketRange } from "./market-range-engine.mjs";
 
 export const tradingViewAlertSchema = z.object({
   ticker: z.string().trim().min(1).max(32),
@@ -9,6 +10,13 @@ export const tradingViewAlertSchema = z.object({
   price: z.coerce.number().finite().positive(),
   signal: z.string().trim().min(1).max(64),
   rsi: z.coerce.number().finite().min(0).max(100).optional(),
+  rangeHigh: z.coerce.number().finite().positive().optional(),
+  rangeLow: z.coerce.number().finite().positive().optional(),
+  rangeMid: z.coerce.number().finite().positive().optional(),
+  atr: z.coerce.number().finite().positive().optional(),
+  atrPercent: z.coerce.number().finite().nonnegative().optional(),
+  volume: z.coerce.number().finite().nonnegative().optional(),
+  volumeSma: z.coerce.number().finite().nonnegative().optional(),
   funding: z.string().trim().max(64).optional(),
   openInterest: z.string().trim().max(64).optional(),
   message: z.string().trim().min(1).max(1000),
@@ -52,6 +60,7 @@ export class TradingViewAlertStore {
       id: randomUUID(),
       status: "received",
       receivedAt: new Date().toISOString(),
+      range: classifyMarketRange(alert),
       analysis: analyzeTradingViewAlert(alert),
       ...alert,
     };
