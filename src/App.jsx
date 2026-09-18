@@ -43,6 +43,36 @@ function rangeLabel(alert) {
   ].filter(Boolean).join(" / ");
 }
 
+function hasExtremeScore(alert) {
+  return Number.isFinite(Number(alert.bottomScore)) || Number.isFinite(Number(alert.topScore));
+}
+
+function ExtremeReadout({ alert }) {
+  if (!hasExtremeScore(alert)) return null;
+  const direction = alert.direction || "NEUTRAL";
+  const state = alert.state || "NONE";
+  const reasons = Array.isArray(alert.reasons) ? alert.reasons : [];
+
+  return (
+    <div className={`extreme-readout extreme-${direction.toLowerCase()}`}>
+      <div className="extreme-head">
+        <strong>{direction} {state}</strong>
+        <span>probability, not certainty</span>
+      </div>
+      <div className="extreme-scores">
+        <span><small>Bottom</small>{formatLevel(alert.bottomScore)}/100</span>
+        <span><small>Top</small>{formatLevel(alert.topScore)}/100</span>
+      </div>
+      <div className="extreme-context">
+        {alert.regime && <span>Regime {alert.regime}</span>}
+        {Number.isFinite(Number(alert.bbZScore)) && <span>BB Z {formatLevel(alert.bbZScore)}</span>}
+        {Number.isFinite(Number(alert.volumeRatio)) && <span>Vol {formatLevel(alert.volumeRatio)}×</span>}
+      </div>
+      {reasons.length > 0 && <p>{reasons.join(" · ")}</p>}
+    </div>
+  );
+}
+
 function LatestAlerts() {
   const [state, setState] = useState({ status: "loading", alerts: [] });
 
@@ -105,7 +135,8 @@ function LatestAlerts() {
                 <span>{alert.signal}</span>
                 <span>{formatTime(alert.timestamp)}</span>
               </div>
-              {alert.range && (
+              <ExtremeReadout alert={alert} />
+              {alert.range && !hasExtremeScore(alert) && (
                 <div className="range-readout">
                   <div className="range-state">{rangeLabel(alert)}</div>
                   <div className="range-levels">

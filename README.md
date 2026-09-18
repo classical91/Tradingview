@@ -10,6 +10,7 @@ Read-only TradingView dashboard and alert receiver.
 - Stores recent alerts locally in `data/tradingview-alerts.json`.
 - Shows the latest alerts on the dashboard.
 - Includes a Pine Script alert generator in `pine/tradingview-alert-mvp.pine`.
+- Includes a scored Local Top / Bottom chart and webhook indicator in `pine/local-extreme-screener.pine`.
 - Classifies each alert with a deterministic Market Range Engine v1.
 
 ## Local Run
@@ -37,6 +38,8 @@ https://your-domain.example/api/tradingview/webhook
 ```
 
 TradingView does not need custom request headers for this MVP. The Pine Script sends the secret in the JSON body as `secret`, and the server validates it.
+
+For local extremes, add `pine/local-extreme-screener.pine` to BTC, ETH, XRP, or XLM on the 1H or 4H chart. Its deterministic 0–100 scores use Bollinger location, RSI, regular divergence, liquidity sweeps, abnormal volume, and structure confirmation. Hidden divergence is continuation context and does not add reversal points. An unconfirmed high score remains a candidate; the script never labels an extreme as certain.
 
 ## Alert Payload
 

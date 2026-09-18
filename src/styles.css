@@ -211,6 +211,78 @@ h1 {
   padding: 9px;
 }
 
+.extreme-readout {
+  background: rgba(91, 140, 255, 0.08);
+  border: 1px solid rgba(91, 140, 255, 0.22);
+  border-left: 3px solid #91b2ff;
+  border-radius: 6px;
+  margin: 9px 0;
+  padding: 10px;
+}
+
+.extreme-bottom {
+  border-left-color: var(--green);
+}
+
+.extreme-top {
+  border-left-color: #fb923c;
+}
+
+.extreme-head,
+.extreme-scores,
+.extreme-context {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.extreme-head strong {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.extreme-head > span,
+.extreme-context span {
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.extreme-scores {
+  margin-top: 9px;
+}
+
+.extreme-scores > span {
+  background: rgba(6, 9, 20, 0.7);
+  color: #f8fafc;
+  flex: 1;
+  font-size: 16px;
+  font-weight: 850;
+  min-width: 100px;
+  padding: 8px;
+}
+
+.extreme-scores small {
+  color: var(--muted);
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+.extreme-context {
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+.extreme-readout p {
+  font-size: 11px;
+  margin-top: 8px;
+}
+
 .range-state {
   color: #dce5f6;
   font-size: 12px;
